@@ -3,6 +3,8 @@ package com.ecommerce.server.mapper;
 import com.ecommerce.server.dto.ProductsDto;
 import com.ecommerce.server.entity.Products;
 
+import java.time.LocalDateTime;
+
 public class ProductsMapper {
 
     public static Products toEntity(ProductsDto dto) {
@@ -12,6 +14,7 @@ public class ProductsMapper {
         product.setPrice(dto.getPrice());
         product.setQuantity(dto.getQuantity());
         product.setCategory(dto.getCategory());
+        product.setCreatedAt(LocalDateTime.now());
         return product;
     }
 
@@ -22,6 +25,7 @@ public class ProductsMapper {
         dto.setPrice(product.getPrice());
         dto.setQuantity(product.getQuantity());
         dto.setCategory(product.getCategory());
+        dto.setUpdatedAt(LocalDateTime.now());
         return dto;
     }
 
@@ -31,5 +35,6 @@ public class ProductsMapper {
         product.setPrice(dto.getPrice());
         product.setQuantity(dto.getQuantity());
         product.setCategory(dto.getCategory());
+        product.setUpdatedAt(LocalDateTime.now());
     }
 }

@@ -1,7 +1,7 @@
 package com.ecommerce.server.repository;
 
 import com.ecommerce.server.entity.Products;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-public interface ProductsRepository extends JpaRepository<Products, Long> {
+public interface ProductsRepository extends ReactiveCrudRepository<Products, Long> {
 }

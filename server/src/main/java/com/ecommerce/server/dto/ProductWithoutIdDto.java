@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ProductsDto {
+public class ProductWithoutIdDto {
 
     private String name;
 
@@ -17,5 +17,8 @@ public class ProductsDto {
 
     private String category;
 
+    private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 }
+

@@ -1,9 +1,9 @@
 package com.ecommerce.server.controllers;
 
 import com.ecommerce.server.dto.ErrorResponseDto;
+import com.ecommerce.server.dto.OrderResponse;
 import com.ecommerce.server.dto.OrdersDto;
-import com.ecommerce.server.entity.Orders;
-import com.ecommerce.server.service.OrdersService;
+import com.ecommerce.server.service.implementation.OrdersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Tag(
         name = "REST Para la gestion de ordenes",
@@ -37,7 +37,7 @@ import java.util.List;
 public class OrdersController {
 
     @NonNull
-    private OrdersService ordersService;
+    private final OrdersService ordersService;
 
     @Operation(
             summary = "Creacion de orden",
@@ -57,9 +57,9 @@ public class OrdersController {
             )
     })
     @PostMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Orders> createOrder(@RequestBody OrdersDto orderDTO) {
-        Orders createdOrder = ordersService.createOrder(orderDTO);
-        return ResponseEntity.ok(createdOrder);
+    public Mono<ResponseEntity<OrderResponse>> createOrder(@RequestBody OrdersDto orderDTO) {
+        return ordersService.createOrder(orderDTO)
+                .map(ResponseEntity::ok);
     }
 
     @Operation(
@@ -80,9 +80,8 @@ public class OrdersController {
             )
     })
     @GetMapping(value = "/listOrders", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<OrdersDto>> getAllOrders() {
-        List<OrdersDto> orders = ordersService.findAll();
-        return ResponseEntity.ok(orders);
+    public Flux<OrdersDto> getAllOrders() {
+        return ordersService.findAll();
     }
 
     @Operation(
@@ -103,9 +102,9 @@ public class OrdersController {
             )
     })
     @PutMapping(value = "/updateOrders/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OrdersDto> updateOrder(@PathVariable Long id, @RequestBody OrdersDto orderDTO) {
-        OrdersDto updatedOrder = ordersService.update(id, orderDTO);
-        return ResponseEntity.ok(updatedOrder);
+    public Mono<ResponseEntity<OrdersDto>> updateOrder(@PathVariable Long id, @RequestBody OrdersDto orderDTO) {
+        return ordersService.update(id, orderDTO)
+                .map(ResponseEntity::ok);
     }
 
     @Operation(
@@ -126,9 +125,9 @@ public class OrdersController {
             )
     })
     @DeleteMapping(value = "/deleteOrders/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteOrder(@PathVariable Long id) {
-        ordersService.delete(id);
-        String message = String.format("Orden con ID %d eliminada correctamente", id);
-        return ResponseEntity.ok(message);
+    public Mono<ResponseEntity<String>> deleteOrder(@PathVariable Long id) {
+        return ordersService.delete(id)
+                .thenReturn(ResponseEntity.ok(String.format("Orden con ID %d eliminada correctamente", id)));
     }
 }
+

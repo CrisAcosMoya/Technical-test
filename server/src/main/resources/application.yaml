@@ -4,11 +4,25 @@ server:
 spring:
   application:
     name: server
+  cloud:
+    config:
+      enabled: false
+    import-check:
+      enabled: false
 
-  datasource:
-    url: jdbc:mysql://localhost:3309/ecommercedb
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri: "http://localhost:8080/realms/master/protocol/openid-connect/certs"
+
+#  main:
+#    allow-bean-definition-overriding: true
+
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/base
     username: root
-    password: root
+    password: 1234
 
   jpa:
     show-sql: true
@@ -32,6 +46,15 @@ management:
 endpoints:
   shutdown:
     enabled: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
 
 info:
   app:

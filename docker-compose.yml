@@ -1,0 +1,26 @@
+services:
+  eurekaserver:
+    image: "eurekaserver:latest"
+    container_name: eureka-server-ins
+    ports:
+      - "8761:8761"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - servers
+  server:
+    image: "backend-ecommerce:latest"
+    container_name: backend-ecommerce
+    ports:
+      - "8111:8111"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - servers
+networks:
+  servers:
+    driver: "bridge"

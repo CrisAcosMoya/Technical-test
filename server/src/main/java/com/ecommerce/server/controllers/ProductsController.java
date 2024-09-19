@@ -3,7 +3,7 @@ package com.ecommerce.server.controllers;
 import com.ecommerce.server.dto.ErrorResponseDto;
 import com.ecommerce.server.dto.ProductsDto;
 import com.ecommerce.server.entity.Products;
-import com.ecommerce.server.service.ProductsService;
+import com.ecommerce.server.service.implementation.ProductsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,8 +23,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 
 @Tag(
         name = "REST Para la gestion de productos",
@@ -37,7 +38,7 @@ import java.util.List;
 public class ProductsController {
 
     @NonNull
-    private ProductsService productsService;
+    private final ProductsService productsService;
 
     @Operation(
             summary = "Creacion de producto",
@@ -57,9 +58,9 @@ public class ProductsController {
             )
     })
     @PostMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Products> createProduct(@RequestBody ProductsDto productDTO) {
-        Products createdProduct = productsService.createProduct(productDTO);
-        return ResponseEntity.ok(createdProduct);
+    public Mono<ResponseEntity<Products>> createProduct(@RequestBody ProductsDto productDTO) {
+        return productsService.createProduct(productDTO)
+                .map(ResponseEntity::ok);
     }
 
     @Operation(
@@ -80,9 +81,8 @@ public class ProductsController {
             )
     })
     @GetMapping(value = "/listProducts", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ProductsDto>> getAllProducts() {
-        List<ProductsDto> products = productsService.findAll();
-        return ResponseEntity.ok(products);
+    public Flux<ProductsDto> getAllProducts() {
+        return productsService.findAll();
     }
 
     @Operation(
@@ -103,9 +103,9 @@ public class ProductsController {
             )
     })
     @PutMapping(value = "/updateProducts/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductsDto> updateProduct(@PathVariable Long id, @RequestBody ProductsDto productDTO) {
-        ProductsDto updatedProduct = productsService.update(id, productDTO);
-        return ResponseEntity.ok(updatedProduct);
+    public Mono<ResponseEntity<ProductsDto>> updateProduct(@PathVariable Long id, @RequestBody ProductsDto productDTO) {
+        return productsService.update(id, productDTO)
+                .map(ResponseEntity::ok);
     }
 
     @Operation(
@@ -126,9 +126,9 @@ public class ProductsController {
             )
     })
     @DeleteMapping(value = "/deleteProducts/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
-        productsService.delete(id);
-        String message = String.format("Producto con ID %d eliminado correctamente", id);
-        return ResponseEntity.ok(message);
+    public Mono<ResponseEntity<String>> deleteProduct(@PathVariable Long id) {
+        return productsService.delete(id)
+                .thenReturn(ResponseEntity.ok(String.format("Producto con ID %d eliminado correctamente", id)));
     }
 }
+
