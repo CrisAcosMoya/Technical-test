@@ -31,7 +31,7 @@ Este proyecto utiliza las siguientes tecnologías:
 
 A continuación se presenta la arquitectura general del proyecto, donde se implementan patrones de **servicio** y **mapper**. Además, el proyecto sigue un enfoque reactivo con **Project Reactor** para una mejor eficiencia en aplicaciones no bloqueantes.
 
-![Arquitectura del Proyecto](https://drive.google.com/file/d/13lIaKvWbr-5RbEChTcxclAYpqNCIAcx8/view?usp=sharing)
+![Arquitectura del Proyecto](https://drive.google.com/uc?export=view&id=13lIaKvWbr-5RbEChTcxclAYpqNCIAcx8)
 
 ## 📝 **Ejecución del Proyecto**
 
